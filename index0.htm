@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <style media="screen">
+
+    #canva{
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      background: black;
+      font-family: sans-serif;
+      color: white;
+    }
+  </style>
+    <meta charset="utf-8">
+    <title>canvas</title>
+  </head>
+  <body>
+    <canvas id="canva"></canvas>
+    <button id='htm'>csv</button>
+    <script type="text/javascript">
+    let t = false
+    let canva = document.querySelector('#canva')
+    canva.width = window.innerWidth
+    canva.height = window.innerHeight
+    window.onresize = function(){
+      canva.width = window.innerWidth
+      canva.height = window.innerHeight
+    }
+    let ctx = canva.getContext('2d')
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canva.width, canva.height);
+    let px, py
+    canva.onmousedown = function(e){
+      t=true
+      px=e.clientX
+      py=e.clientY
+    }
+    canva.onmouseup = function(){
+      t=false
+      let url = canva.toDataURL()
+      console.log(url)
+    }
+    canva.onmouseleave = function(){
+      t=false
+    }
+
+    canva.onmousemove = function(e){
+      let x = e.clientX;
+			let y = e.clientY;
+      draw(px, py, x, y, t)
+      px=x
+      py=y
+    }
+    function draw(px, py, x, y, tf){
+      if(tf){
+        ctx.beginPath()
+        ctx.moveTo(px,py)
+        ctx.lineTo(x,y)
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = '80'
+        ctx.strokeStyle = 'white'
+        ctx.stroke()
+        console.log('drawing')
+      }else{
+        console.log("can't draw")
+      }
+    }
+    let b = document.createElement('button')
+    b.innerText = 'store'
+    document.onchange = function(){
+      console.log('changed')
+    }
+
+    </script>
+  </body>
+</html>

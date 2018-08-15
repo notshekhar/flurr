@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <script type="text/javascript">
+
+    window.onload = function(){
+      if(document.readyState == "complete"){
+        document.body.style.display = "block";
+      }
+      if(note.innerText==""){
+        note.innerHTML = '<div id="none"><center><img src="zero-state.svg"><br><br>A fresh start</center></div>';
+        not = document.getElementById("none");
+        not.style.top = window.innerHeight/2 - not.getBoundingClientRect().height/2 +"px";
+        not.style.left = window.innerWidth/2 - not.getBoundingClientRect().width/2 +"px";
+        window.onresize = function(){
+          not.style.top = window.innerHeight/2 - not.getBoundingClientRect().height/2 +"px";
+          not.style.left = window.innerWidth/2 - not.getBoundingClientRect().width/2 +"px";
+        }
+      }
+    }
+    </script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Create Notes</title>
+    <style media="screen">
+    @font-face {
+      src: url(/fonts/flurr-web.ttf);
+      font-family: flurr;
+    }
+    ::-webkit-scrollbar{
+      width: 0px;
+    }
+    body{
+      display: none;
+      height: 0px;
+      font-family: flurr, Helvetica Neue, Segoe UI, Helvetica, Arial, sans-serif;
+    }
+      #value{
+        resize: none;
+        top: 62px;
+        left: 21px;
+        width: calc(100% - 40px);
+        height: calc(100% - 121px);
+        position: absolute;
+        border: none;
+        outline: none;
+        font-size: 20px;
+        font-family: flurr;
+      }
+
+      #write{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-left: -200px;
+        margin-top: -200px;
+        width: 400px;
+        height: 400px;
+        background: white;
+        border-radius: 21px;
+        font-size: 14px;
+      }
+      #show{
+        background: rgba(0,0,0,0.7);
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        display: none;
+        z-index: 2;
+        /* opacity: 0.7; */
+      }
+      #cancel{
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        font-size: 40px;
+        color: grey;
+        cursor: pointer;
+      }
+      #cancel:hover{
+        color: white;
+      }
+      #createnote{
+        bottom: 10px;
+        left: 50%;
+        color: white;
+        margin-left: -50px;
+        background: linear-gradient(to right, blue , #00abff);
+        width: 100px;
+        height: 40px;
+        border: none;
+        border-radius: 2px;
+        position: absolute;
+        outline: none;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      #header{
+        top: 0px;
+        left: 0px;
+        position: fixed;
+        background: white;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08), rgba(0, 0, 0, 0.2) 0px 7px 18px;
+        height: 50px;
+        width: 100%;
+        z-index: 1;
+      }
+      #create{
+        right: 10px;
+        top: 50%;
+        margin-top: -10px;
+        height: 20px;
+        position: absolute;
+        color: white;
+        background: blue;
+        border-radius: 2px;
+        border: none;
+        opacity: 1;
+        z-index: 1;
+      }
+      #delete{
+        color: white;
+        background: red;
+        left: 10px;
+        top: 50%;
+        margin-top: -10px;
+        height: 20px;
+        position: absolute;
+        border-radius: 2px;
+        border: none;
+        font-size: 14px;
+      }
+      #delete:hover{
+        color: grey;
+        background: #f7cbcb;
+      }
+      #create:hover{
+        color: grey;
+        background: lightblue;
+      }
+      #create:active{
+        color: white;
+        background: grey;
+      }
+      #notes{
+        position: relative;
+        top: 50px;
+        z-index: -1;
+      }
+      li{
+        font-size: 16px;
+        position: relative;
+        text-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+        list-style: none;
+        color: white;
+        background: linear-gradient(to right, blue , #00abff);
+        margin-bottom: 15px;
+        padding: 20px;
+        border-radius: 30px;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 18px;
+        font-family: flurr, Helvetica Neue, Segoe UI, Helvetica, Arial, sans-serif;
+      }
+      hr{
+        display: none;
+      }
+      .speak{
+        top: 50%;
+        right: 21px;
+        position: absolute;
+        color: black;
+        background: white;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-top: -10px;
+        border: none;
+        outline: none;
+
+      }
+      #title{
+        position: absolute;
+        top: 1px;
+        left: 0px;
+        width: 90%;
+        height: 32px;
+        padding: 20px;
+        outline: none;
+        font-size: 20px;
+        border: none;
+        border-top-left-radius: 21px;
+        border-top-right-radius: 21px;
+        font-family: flurr;
+
+      }
+      #hr{
+        position: absolute;
+        top: 42px;
+        left: 0px;
+        background: linear-gradient(to right, blue , #00abff);
+        height: 1px;
+        width: 100%;
+      }
+      #expand{
+        display: none;
+      }
+      #expand{
+        background: rgba(0,0,0,0.7);
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        display: none;
+        z-index: 2;
+      }
+      #wrap{
+        top: 50%;
+        left: 50%;
+        width: 360px;
+        height: 550px;
+        margin-top: -275px;
+        margin-left: -180px;
+        position: absolute;
+        background: white;
+      }
+
+      #back{
+        cursor: pointer;
+        top: 10px;
+        left: 10px;
+        height: 20px;
+        position: absolute;
+        /* color: grey; */
+        transform: rotate(180deg);
+        z-index: 2;
+        font-size: 14px;
+      }
+      #back:hover{
+        color: white;
+      }
+      #showtitle{
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        color: white;
+        width: 100%;
+        min-height: 200px;
+        font-family: flurr, Helvetica Neue, Segoe UI, Helvetica, Arial, sans-serif;
+        font-size: 21px;
+        z-index: 1;
+        background: linear-gradient(to right, blue , #00abff);
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+
+      }
+      #body{
+        position: absolute;
+        overflow: scroll;
+        left: 0px;
+        width: 100%;
+        background: white;
+      }
+      #ts{
+        top: 50%;
+        left: 50%;
+        position: absolute;
+      }
+      #bs{
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        color: black;
+        font-size: 21px;
+
+      }
+      #menu{
+        display: none;
+        width: 0px;
+        height: 0px;
+        background: white;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+        z-index: 0.5;
+        position: absolute;
+        top: 60px;
+        left: 40px;
+        border-radius: 2px;
+        transition: height 200ms, width 200ms;
+      }
+      #del{
+        position: absolute;
+        left: 0px;
+        width: 100%;
+        height: 50px;
+        top: 0px;
+        cursor: pointer;
+        text-align: center;
+      }
+      #del:hover{
+        background: rgba(0,0,0,0.1);
+      }
+      #sidemenu{
+        display: none;
+      }
+      #none{
+        position: absolute;
+        font-weight: bolder;
+        font-style: 40px;
+        width: 400px;
+        height: 400px;
+        /* background: red; */
+      }
+
+      /* for mobile */
+      @media(max-width: 800px){
+        #write{
+          width: 100%;
+          height: calc(100% - 50px);
+          top: 50px;
+          left: 0px;
+          margin-top: 0px;
+          margin-left: 0px;
+          border-radius: 0px;
+        }
+        #cancel{
+          height: 50px;
+          right: 0px;
+          top: 0px;
+          width: 100%;
+          padding-left: 10px;
+          background: white;
+        }
+        #cancel:hover{
+          color: black;
+        }
+        #createnote{
+          bottom: 0px;
+          left: 0px;
+          width: 100%;
+          margin-left: 0px;
+          margin-bottom: 0px;
+          border-radius: 0px;
+          box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+
+        }
+        hr{
+          display: block;
+          position: absolute;
+          top: 0px;
+          left: 0px;
+          background: linear-gradient(to right, blue , #00abff);
+          height: 1px;
+          width: 100%;
+        }
+        #wrap{
+          width: 100%;
+          height: 100%;
+          margin-top: 0px;
+          margin-left: 0px;
+          left: 0px;
+          top: 0px;
+        }
+        #title{
+          border-radius: 0px;
+          top: 9px;
+        }
+        #hr{
+          top: 52px;
+        }
+        #value{
+          top: 72px;
+        }
+        .speak{
+          display: none;
+        }
+        #sidemenu{
+          display: block;
+
+        }
+        #menu{
+          display: none;
+        }
+        #all{
+          z-index: 1;
+          display: none;
+          position: fixed;
+          top: 0px;
+          left: 0px;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.5);
+        }
+        .frombottomtotop{
+          position: fixed;
+          bottom: 0px;
+          width: 100%;
+          height: 0px;
+          animation-name: bottomtotop;
+          animation-duration: 300ms;
+          animation-fill-mode: forwards;
+        }
+        @keyframes bottomtotop {
+          from{
+            height: 0px;
+          }
+          to{
+            height: 300px;
+          }
+        }
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <!-- preload -->
+    <div id="preload">
+
+    </div>
+    <!-- create new notes -->
+    <div id="show">
+      <div id="cancel">x</div>
+      <div id="write">
+        <hr>
+        <input type="text" id="title" placeholder="Write title of note">
+        <hr id="hr">
+        <textarea placeholder="Write new note" name="name" id="value" rows="8" cols="80"></textarea>
+        <button type="button"id="createnote" name="button">Create</button>
+      </div>
+    </div>
+
+    <div id="header">
+      <button type="button" id="create" name="button" title="create new note">Write</button>
+      <button type="button"id="delete" name="button">Delete All</button>
+    </div>
+    <div id="notes">
+
+
+    </div>
+
+    <div id="expand">
+      <div id="wrap">
+      <div id="header2">
+        <i>
+          <svg  id="back"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.407 22.938"><metadata><xpacket begin=" " id="W5M0MpCehiHzreSzNTczkc9d" ?=""><x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.6-c140 79.160451, 2017/05/06-01:08:21 "><rdf:rdf xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:description rdf:about=""></rdf:description></rdf:rdf></x:xmpmeta><xpacket end="w" ?=""></xpacket></xpacket></metadata><defs><style> .cls-1 { fill: white; fill-rule: evenodd; } </style></defs><path id="Purple_arrow" data-name="Purple arrow" class="cls-1" d="M345.787,251.832L337.808,260a3.172,3.172,0,0,1-4.56,0,3.359,3.359,0,0,1,0-4.67l5.7-5.837-5.7-5.837a3.359,3.359,0,0,1,0-4.67,3.172,3.172,0,0,1,4.56,0l7.979,8.172A3.359,3.359,0,0,1,345.787,251.832Z" transform="translate(-332.312 -238.031)"></path></svg>
+        </i>
+    </div>
+      <div id="showtitle">
+
+      </div>
+      <div id="body"></div>
+    </div>
+    </div>
+    <!-- menu -->
+    <div id="all">
+      <div id="menu">
+        <span id="del">
+          Delete
+        </span>
+      </div>
+    </div>
+    <script type="text/javascript">
+    let arr = [];
+    let note = document.getElementById("notes");
+
+      if(localStorage.getItem("note")){
+        arr = JSON.parse(localStorage.getItem("note"));
+        for(let i=arr.length-1; i>=0; i--){
+          note.innerHTML += "<li id=" + i + ">" + arr[i].title + '<button class="speak">';
+        }
+      }
+    let not;
+    let title = document.getElementById("showtitle");
+    let writet = document.getElementById("title");
+    let body = document.getElementById("body");
+    let sho = document.getElementById("show");
+    let hide = document.getElementById("cancel");
+    let val = document.getElementById("value");
+    let create_note = document.getElementById("createnote");
+    let dele = document.getElementById("del");
+    let write = document.getElementById("create");
+    let exp = document.getElementById("expand");
+    writet.onkeyup = function(){
+      if(writet.value.length>20){
+        writet.disabled = true;
+      }
+    }
+    // let spks = document.querySelectorAll(".speak");
+    write.onclick = function(){
+      sho.style.display = "block";
+      writet.focus();
+
+    }
+    hide.onclick = function(){
+      sho.style.display = "none";
+      write.disabled = false;
+      writet.disabled = false;
+      writet.value = "";
+      val.value = "";
+    }
+    create_note.onclick = function(){
+      if(val.value.length>1){
+        let t;
+        if(writet.value.length>0){
+          t = writet.value;
+        }else if(val.value.length>20){
+          t= val.value[0];
+          for(let i=1; i<20; i++){
+            t += val.value[i];
+          }
+        }else{
+            t=val.value;
+          }
+
+        console.log(t);
+        arr.push({"title": t, "body": val.value});
+        localStorage.setItem("note", JSON.stringify(arr));
+        val.value = "";
+        sho.style.display= 'none';
+        writet.value = "";
+        writet.disabled = false;
+        note.innerHTML="";
+        note.placeholder="Write new note";
+        title.placeholder="Write title for this note"
+        write.disabled = false;
+        window.scrollTo(0, 0);
+        // spk = document.querySelectorAll(".speak");
+        for(let i=arr.length-1; i>=0; i--){
+
+          note.innerHTML += "<li id=" + i + ">" + arr[i].title + '<button class="speak">';
+        }
+
+      }else{
+        console.log("empty write something");
+      }
+
+    }
+    let deleteall = document.getElementById("delete");
+    deleteall.onclick = function(){
+      note.innerHTML = "";
+      arr = [];
+      localStorage.setItem("note", JSON.stringify(arr));
+      if(note.innerText==""){
+        note.innerHTML = '<div id="none"><center><img src="zero-state.svg"><br><br>A fresh start</center></div>';
+      }
+      not = document.getElementById("none");
+      not.style.top = window.innerHeight/2 - not.getBoundingClientRect().height/2 +"px";
+      not.style.left = window.innerWidth/2 - not.getBoundingClientRect().width/2 +"px";
+      window.onresize = function(){
+        not.style.top = window.innerHeight/2 - not.getBoundingClientRect().height/2 +"px";
+        not.style.left = window.innerWidth/2 - not.getBoundingClientRect().width/2 +"px";
+      }
+
+    }
+
+    val.onfocus = function(){
+      this.placeholder="";
+    }
+    val.onblur = function(){
+      if(val.value.length<1){
+        this.placeholder = "Write new note";
+      }else{
+        this.placeholder="";
+      }
+    }
+    title.onfocus = function(){
+      this.placeholder="";
+    }
+    title.onblur = function(){
+      if(title.value.length<1){
+        this.placeholder = "Write new note";
+      }else{
+        this.placeholder="";
+      }
+    }
+    window.onresize = function(){
+      let top = document.getElementById("showtitle").getBoundingClientRect().height;
+      let height = document.getElementById("wrap").getBoundingClientRect().height-document.getElementById("showtitle").getBoundingClientRect().height;
+      // console.log(top,height);
+      document.getElementById("body").style.top = top+"px";
+      document.getElementById("body").style.height =  height+"px";
+      document.getElementById("ts").style.marginTop = "-"+document.getElementById("ts").getBoundingClientRect().height/2 +"px";
+      document.getElementById("ts").style.marginLeft = "-"+document.getElementById("ts").getBoundingClientRect().width/2 +"px";
+    }
+
+    document.onclick = function(e){
+      // console.log(e);
+      if(e.target.classList[0]=="speak"){
+        let text = e.path[1].innerText;
+        let s = new SpeechSynthesisUtterance();
+        s.text = text;
+        speechSynthesis.speak(s);
+        // console.log(e);
+      }else if(e.target.tagName == "LI"){
+        exp.style.display = "block"
+        let top = document.getElementById("showtitle").getBoundingClientRect().height;
+        let height = document.getElementById("wrap").getBoundingClientRect().height-document.getElementById("showtitle").getBoundingClientRect().height;
+        // console.log(top,height);
+        document.getElementById("body").style.top = top+"px";
+        document.getElementById("body").style.height =  height+"px";
+        let i = e.path[0].id;
+
+        let tp = document.createElement("span");
+        tp.id = "ts";
+        tp.innerText = arr[i].title;
+        title.append(tp);
+        document.getElementById("ts").style.marginTop = "-"+document.getElementById("ts").getBoundingClientRect().height/2 +"px";
+        document.getElementById("ts").style.marginLeft = "-"+document.getElementById("ts").getBoundingClientRect().width/2 +"px";
+
+        let bp = document.createElement("span");
+        bp.id="bs";
+        bp.innerText = arr[i].body;
+        body.append(bp);
+      }
+
+
+    }
+
+
+    document.getElementById("back").onclick = function(){
+      exp.style.display = "none";
+      title.innerHTML="";
+      body.innerHTML = "";
+    }
+    let id;
+    document.onmousedown = function(e){
+      if(e.button==2){
+        if(e.srcElement.localName == "li"){
+          id=e.srcElement.id;
+          document.getElementById("menu").style.display = "block";
+          document.getElementById("menu").style.top = e.clientY+"px";
+          document.getElementById("menu").style.left = e.clientX+"px";
+          document.getElementById("menu").style.height = "300px";
+          document.getElementById("menu").style.width = "200px";
+        }else{
+          document.getElementById("menu").style.display = "none";
+          document.getElementById("menu").style.height = "0px";
+          document.getElementById("menu").style.width = "0px";
+        }
+      }else if(e.button==1){
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("menu").style.height = "0px";
+        document.getElementById("menu").style.width = "0px";
+      }else if(e.button==0){
+        document.getElementById("menu").style.display = "none";
+        document.getElementById("menu").style.height = "0px";
+        document.getElementById("menu").style.width = "0px";
+      }
+      if(e.srcElement.id == "del"){
+        document.getElementById("menu").style.display = "block";
+        arr.splice(id, 1);
+        localStorage.setItem("note", JSON.stringify(arr));
+        // console.log(id, arr);
+        note.innerHTML = "";
+        for(let i=arr.length-1; i>=0; i--){
+          note.innerHTML += "<li id=" + i + ">" + arr[i].title + '<button class="speak">';
+        }
+        if(note.innerText==""){
+          note.innerHTML = '<div id="none"><center><img src="zero-state.svg"><br><br>A fresh start</center></div>';
+          not = document.getElementById("none");
+          not.style.top = window.innerHeight/2 - not.getBoundingClientRect().height/2 +"px";
+          not.style.left = window.innerWidth/2 - not.getBoundingClientRect().width/2 +"px";
+          window.onresize = function(){
+            not.style.top = window.innerHeight/2 - not.getBoundingClientRect().height/2 +"px";
+            not.style.left = window.innerWidth/2 - not.getBoundingClientRect().width/2 +"px";
+          }
+        }
+        document.getElementById("menu").style.display = "none";
+
+      }
+
+      if(window.innerWidth<800){
+        if(e.srcElement.localName == "li"){
+          id=e.srcElement.id;
+          document.getElementById("all").style.display = "block";
+          document.getElementById("menu").style.display = "block";
+          document.getElementById("menu").classList.add("frombottomtotop");
+          document.getElementById("menu").style.bottom = "0px";
+          document.getElementById("menu").style.top = "auto";
+          document.getElementById("menu").style.left = "0px";
+          document.getElementById("menu").style.height = "300px";
+          document.getElementById("menu").style.width = "100%";
+        }else{
+          document.getElementById("all").style.display = "none"
+          document.getElementById("menu").style.display = "none";
+          document.getElementById("menu").classList.remove("frombottomtotop");
+          document.getElementById("menu").style.height = "0px";
+          document.getElementById("menu").style.width = "0px";
+        }
+        if(e.button==1){
+          document.getElementById("all").style.display = "none";
+          document.getElementById("menu").style.display = "none";
+          document.getElementById("menu").classList.remove("frombottomtotop");
+          document.getElementById("menu").style.height = "0px";
+          document.getElementById("menu").style.width = "0px";
+        }else if(e.button==0){
+          document.getElementById("all").style.display = "none";
+          document.getElementById("menu").style.display = "none";
+          document.getElementById("menu").classList.remove("frombottomtotop");
+          document.getElementById("menu").style.height = "0px";
+          document.getElementById("menu").style.width = "0px";
+        }
+
+      }
+
+
+    }
+
+    document.oncontextmenu = function(e){
+      e.preventDefault();
+    }
+    if(note.innerText==""){
+      note.innerHTML = '<div id="none"><center><img src="zero-state.svg"><br><br>A fresh start</center></div>';
+      not = document.getElementById("none");
+      not.style.top = window.innerHeight/2 - not.getBoundingClientRect().height/2 +"px";
+      not.style.left = window.innerWidth/2 - not.getBoundingClientRect().width/2 +"px";
+      window.onresize = function(){
+        not.style.top = window.innerHeight/2 - not.getBoundingClientRect().height/2 +"px";
+        not.style.left = window.innerWidth/2 - not.getBoundingClientRect().width/2 +"px";
+      }
+    }
+    </script>
+  </body>
+</html>

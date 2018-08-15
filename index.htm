@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="/lib/math.js"></script>
+	<script src="/lib/tf.js" charset="utf-8"></script>
+	<!-- <script type="text/javascript" src="element.js"></script> -->
+	<!-- <script type="text/javascript" src="/lib/lstm.js"></script> -->
+	<!-- <script type="text/javascript" src="lex.js"></script> -->
+	<!-- <script type="text/javascript"src="p5.js"></script> -->
+	<!-- <script type="text/javascript" src="p5.min.js"></script> -->
+	<!-- <script type="text/javascript" src="sketch.js"></script> -->
+	<title>predict digit</title>
+
+<!-- <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAu97oMeIYpNAMh01a7OxOocq45TF2wpmA",
+    authDomain: "doobmbasic.firebaseapp.com",
+    databaseURL: "https://doobmbasic.firebaseio.com",
+    projectId: "doobmbasic",
+    storageBucket: "",
+    messagingSenderId: "64073586172"
+  };
+  firebase.initializeApp(config);
+</script> -->
+
+
+	<script id="firebase" type="text/javascript">
+       //TODO: realvtimedatabase in firebase;
+			 // let database = firebase.database();
+			 // let ref = database.ref("/post");
+			 // ref.push({"post id": 2});
+			 // console.log(ref);
+			 // firebaseDatabase("/post", {"post id": 2});
+
+
+	</script>
+	<script type="text/javascript">
+
+
+		let nn = new fnn([784,21,221,21,10], 0.009999999776482582);
+
+// //getting trained weights and bias
+		if(localStorage.getItem("mnist")){
+			let weights = JSON.parse(localStorage.getItem("mnist"));
+			weights = weights.weights;
+			nn.upload(weights);
+		}else{
+			let request = new XMLHttpRequest();
+			request.open("GET", "mnist.json");
+			request.onload = function(){
+				let weights = request.responseText;
+				weights = JSON.parse(weights);
+				let we = JSON.stringify(weights);
+				localStorage.setItem("mnist", we);
+				weights = weights.weights;
+				nn.upload(weights);
+		}
+			request.send();
+	}
+
+// // Tranning of neural net
+		// let r = new XMLHttpRequest();
+		// let score = [];
+		// let output = [0,0,0,0,0,0,0,0,0,0];
+		// r.open("GET", "mnist_train.csv");
+		// r.onloadstart = function(){
+		// 	console.log("loading data");
+		// }
+		// r.onloadend = function(){
+		// 	console.log("loaded");
+		// 	let text = r.responseText;
+		// 	let lines = text.split(/\r\n|\n/);
+		// 	let data = [];
+		// 	for(let i=0; i<lines.length; i++){
+		// 		let d = lines[i].split(",");
+		// 		for(let i=1; i<d.length; i++){
+		// 			d[i] = d[i]/255;
+		// 		}
+		// 		data.push(d);
+		// 	}
+		// 	// for (let i = 0; i < data.length-1; i++) {
+		// 	// 	let input = data[i].slice(1);
+		// 	//   let q = nn.query(input);
+		// 	// 		console.log(data[i][0], math.findmax(q),q[math.findmax(q)]);
+		// 	// 		if(math.findmax(q)==data[i][0]){
+		// 	// 			score.push(1);
+		// 	// 		}else{
+		// 	// 			score.push(0);
+		// 	// 		}
+		// 	//
+   	// 	// }
+		// 	// console.log(score.length-math.sumArray(score));
+		// 	for(let j=0; j<5; j++){
+		// 		console.log('starting round'+j)
+		// 		for (let i = 0; i < data.length-1; i++) {
+		// 			let input = data[i].slice(1);
+		// 			for (let i = 0; i < output.length; i++) {
+		// 				output[i] = 0;
+		// 			}
+		// 			output[data[i][0]] = 1;
+		//
+		// 			nn.learn(input, output);
+		// 			let q = nn.query(input);
+		// 			if(data[i][0]==math.findmax(q)){
+		// 				score.push(1);
+		// 			}else{
+		// 				score.push(0);
+		// 			}
+		// 			let acc = (math.sumArray(score)/score.length)*100;
+		// 			console.log(i,acc);
+		//
+		//
+		// 		}
+		// 	}
+		//
+		// 	console.log(math.findmax(nn.query(data[0].slice(1))), "accurate: "+nn.query(data[0].slice(1))+"%"+ 'correct is'+ data[0][0]);
+		// }
+		//
+		// r.send();
+
+	</script>
+
+	<style media="screen">
+		canvas{
+			width: 200px;
+			height: 200px;
+			border-radius: 4px;
+			background: white;
+			box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+		}
+		div{
+			outline: none;
+		}
+		#learn{
+			color: white;
+			background: green;
+			box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+			border: none;
+			width: 150px;
+			height: 38px;
+			border-radius: 2px;
+		}
+		#query{
+			color: white;
+			background: blue;
+			box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+			border: none;
+			width: 150px;
+			height: 38px;
+			border-radius: 2px;
+		}
+	</style>
+</head>
+<body>
+	<center>
+		<canvas id="canvas" width="300" height="300"></canvas><br><br>
+		<input type="file" id="file"value=""><br><br>
+		<div id="output" contenteditable="true">
+		</div>
+		<button type="button"id="learn" name="button">Train</button>
+		<button type="button" id="query" name="button">Query</button>
+	</center>
+	<script type="text/javascript">
+	  let data;
+
+   	let tf = false;
+
+		let fl = document.getElementById("file");
+	    	  fl.onchange = function(e){
+					let img = new Image(28,28);
+		    	img.src = window.URL.createObjectURL(fl.files[0]);
+					document.body.append(img);
+					let canva = document.createElement("canvas");
+					canva.height = img.height;
+					canva.width  = img.width;
+					let ctx = canva.getContext("2d");
+					img.onload = function(){
+						ctx.drawImage(img,0,0,img.width, img.height);
+						let url = canva.toDataURL();
+						data = ctx.getImageData(0,0,canva.width,canva.height).data;
+						data = math.rgba(data);
+									// console.log(data.red,data.green, data.blue);
+						data = math.cto(data.green, 255);
+						let q = nn.query(data);
+						// ctx.putImageData(data.red,0,0);
+						canva.toDataURL();
+						document.getElementById("output").innerHTML = 'It is '+ math.findmax(q) + ', Accuracy: ('+ q[math.findmax(q)]*100 +'%)';
+
+
+					}
+		}
+
+
+
+
+		let train = document.getElementById("learn");
+		train.onclick = function(){
+			let input = data;
+			// console.log(data);
+			let answer = [0,0,0,0,0,0,0,0,0,0];
+			answer[parseInt(document.getElementById("output").textContent)] = 1;
+			nn.learn(input, answer);
+			console.log(math.findmax(nn.query(input)), nn.query(input)[math.findmax(nn.query(input))]);
+		}
+		let canva = document.querySelector("#canvas")
+		let ctx = canva.getContext("2d")
+
+		let a=0;
+		let b=0;
+		canva.onmousemove = function(e){
+			let x = e.clientX;
+			let y = e.clientY;
+			ctx.font = "30px Arial";
+			ctx.fillText("hello world", x, y)
+			// console.log(x,y);
+
+		}
+		// ctx.fillStyle = "red";
+		// ctx.fillRect(0,0,80,80)
+
+	</script>
+	<a href="index0.htm">click here</a><br>
+	<a href="note.htm">create note</a><br>
+	<a href="bobo.htm">BoBo</a><br>
+</body>
+</html>

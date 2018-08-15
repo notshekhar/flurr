@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/lib/tensorflow.js"></script>
+    <script src="/lib/math.js"></script>
+    <script src="/lib/aarn.js"></script>
+    <!-- <script src="word2vec.js" charset="utf-8"></script> -->
+    <title>BoBo</title>
+    <style media="screen">
+    .face{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 110px;
+      height: 100px;
+      background: #1b6cfb;
+      margin-left: -55px;
+      margin-top: -50px;
+      border-radius: 50%;
+      border: solid;
+      border-width: 2px;
+      border-color: blue;
+      border-bottom-right-radius: 46%;
+      border-bottom-left-radius: 46%;
+      box-shadow: inset -4px -15px 20px 0px rgba(0,0,0,0.25)
+
+    }
+    .anim{
+      animation-name: bottomtotop;
+      animation-duration: 700ms;
+      animation-iteration-count: infinite;
+    }
+    @keyframes bottomtotop{
+      0%{
+        width: 100px;
+        height: 100px;
+      }
+      20%{
+        width: 80px;
+        height: 120px;
+        margin-left: -40px;
+        margin-top: -120px;
+      }
+      45%{
+        width: 100px;
+        height: 100px;
+        margin-left: -50px;
+        margin-top: -120px;
+      }
+      75%{
+        width: 120px;
+        height: 80px;
+        margin-left: -60px;
+        margin-top: -100px;
+      }
+      100%{
+        width: 100px;
+        height: 100px;
+        margin-top: -50px;
+        margin-right: -50px;
+      }
+    }
+    .mouth{
+      position: absolute;
+      width: 30px;
+      height: 10px;
+      background: #1b6cfb;
+      bottom: 20px;
+      left: 50%;
+      margin-left: -15px;
+      border-radius: 1px 1px 100px 100px;
+      overflow: hidden;
+      border-style: none solid solid solid;
+      border-color: blue;
+      border-width: 0px 2px 2px 2px;
+      overflow: visible;
+    }
+    .mouth::before{
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -4px;
+      width: 5px;
+      height: 15px;
+      border-style: none solid none none;
+      border-width: 2px 2px 2px 0;
+      border-color: blue;
+      margin-top: -10px;
+      border-radius: 0 50% 50% 0px;
+      transform: rotate(-60deg);
+      transform-origin: center;
+    }
+    .eyel{
+      position: absolute;
+      top: 30px;
+      left: 15px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      overflow: hidden;
+      box-shadow: inset -1px -1px 20px 0px rgba(0, 0, 0, 0.1);
+    }
+    .eyel_dot{
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 11px;
+      height: 11px;
+      margin-left: -5.5px;
+      margin-top: -5.5px;
+      background-color: black;
+      border-radius: 50%;
+    }
+    .eyer{
+      position: absolute;
+      top: 30px;
+      right: 15px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      overflow: hidden;
+      box-shadow: inset -1px -1px 20px 0px rgba(0, 0, 0, 0.1);
+    }
+    .eyer_dot{
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 11px;
+      height: 11px;
+      margin-left: -5.5px;
+      margin-top: -5.5px;
+      background-color: black;
+      border-radius: 50%;
+    }
+    .hair{
+      position: absolute;
+      width: 30px;
+      height: 25px;
+      /* background: red; */
+      top: -16px;
+      left: 50%;
+      margin-left: -10px;
+      transform: rotate(10deg);
+      transform-origin: bottom;
+    }
+    .hair::before{
+      content: '';
+      position: absolute;
+      background: #1b6cfb;
+      border: solid;
+      border-width: 2px 2px 0 2px;
+      border-color: blue;
+      width: 15px;
+      height: 100%;
+      border-radius: 100px 100px 0 20px;
+    }
+    .hair::after{
+      content: '';
+      position: absolute;
+      background: #1b6cfb;
+      border: solid;
+      border-width: 2px 2px 0 2px;
+      border-color: blue;
+      width: 15px;
+      bottom: 0px;
+      height: 90%;
+      right: 0px;
+      border-radius: 100px 100px 0 40px;
+    }
+    .add{
+      background: red;
+    }
+    </style>
+  </head>
+  <body>
+    <button id="but">jump</button>
+    <div class="face">
+      <div class="hair"></div>
+      <div class="eyer"><span class="eyer_dot"></span></div>
+      <div class="eyel"><span class="eyel_dot"></span></div>
+      <span class="mouth"></span>
+    </div>
+    <script type="text/javascript">
+    let eyer = slt('.eyer_dot')
+    let eyel = slt('.eyel_dot')
+    let mouth = slt('.mouth')
+    let face = slt('.face')
+    let hair = slt('.hair')
+    aarn.on('mousemove',function(e){
+      eyer.styl({
+        top: e.clientY/window.innerHeight*100 + '%',
+        left: e.clientX/window.innerWidth*100 + '%'
+      })
+      eyel.styl({
+        top: e.clientY/window.innerHeight*100 + '%',
+        left: e.clientX/window.innerWidth*100 + '%'
+      })
+      hair.styl({
+        transform: "rotate("+ e.clientX/window.innerWidth*10 +"deg)"
+      })
+    })
+    let m = slt('#but')
+    let t = true
+    slt('.face').on("mouseover", function(){
+      if(t){
+        slt('.face').adcls('anim')
+      }else{
+        slt('.face').styl({
+          animationPlayState: 'running'
+        })
+      }
+    })
+    slt('.face').on('mouseout', function(){
+      slt('.face').styl({
+        animationPlayState: 'paused'
+      })
+      t = false
+    })
+    </script>
+  </body>
+</html>
+
+2018/I/145429
